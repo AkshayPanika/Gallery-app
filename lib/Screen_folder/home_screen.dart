@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gallery_app/Animation_folder/height_width.dart';
+import 'package:gallery_app/Login_folder/Cubit_auth/auth_cubit.dart';
+import 'package:gallery_app/Login_folder/Cubit_auth/auth_state.dart';
+import 'package:gallery_app/Login_folder/login_screen.dart';
 import 'package:gallery_app/Screen_folder/photos_screen.dart';
+import 'package:gallery_app/Screen_folder/video_screen.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
 import '../Reusable_folder/text_style_widget.dart';
 import 'bottom_sheet.dart';
 
@@ -14,110 +19,99 @@ class HomeScree extends StatefulWidget {
 
 class _HomeScreeState extends State<HomeScree> with SingleTickerProviderStateMixin {
 
-  List myPhotos = ["Akshay","Soniya","Akshat","Akchita","Akshra"];
-
   late final TabController _tabController;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      height: MediaQuery.of(context).size.height,
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
+    return  SafeArea(
+      child: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
 
-                ///___ AppBar
-                40.height,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("   Gallery",style: titleTextBlack),
-                    Row(
-                      children: [
-                        IconButton(onPressed: (){}, icon:const Icon(Icons.search)),
-                        IconButton(onPressed: (){}, icon:const Icon(Icons.more_vert)),
-                      ],
-                    ),
-                  ],
-                ),
+                  ///___ AppBar
+                  5.height,
+                  ListTile(
+                    title:  Text("   Gallery",style: headLineTextBlack2),
 
-                ///___ TabBar
-                TabBar(
-                  controller: _tabController,
-                  indicatorColor: Colors.black,
-                  tabs:  [
-                    Tab(child: Text("Photos",style: titleTextBlue,),),
-                    Tab(child: Text("Video",style: titleTextBlue,),),
-                  ],
-                ),
+                    ///___ PopupMenuButton
+                    trailing: PopupMenuButton(
+                      icon: const Icon(Icons.more_vert,color: Colors.black,),
+                     itemBuilder: (context) => [
 
-                20.height,
-                SizedBox(
-                 height:MediaQuery.of(context).size.height,
-                  child: TabBarView(
-                     controller: _tabController,
-                     children:<Widget> [
-                  ///___ Photos
-                       PhotosScreen(),
+                       ///___ LogOut
+                       PopupMenuItem(
+                         onTap: (){
+                           BlocProvider.of<AuthCubit>(context).logOut();
+                         },
+                           child:  BlocConsumer<AuthCubit,AuthState>(builder: (context, state) {
+                         return const Text("LogOut");
+                       },
+                         listener: (context, state) {
+                           if(state is AUthLoggedOutState){
+                             Navigator.popUntil(context, (route) => route.isFirst);
+                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
+                           }
+                         },)),
+                     ],
+                    )
+                  ),
 
-                  ///___ Videos
-                  Column(
-                    children: [
-                      ///___ headline
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Today",style: titleTextBlack,),
-                            Text("View all",style: titleTextBlue,),
+                  5.height,
+                  StickyHeader(
+                    ///___ TabBar
+                    header: Container(
+                      color: Colors.white,
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorColor: Colors.black,
+                        tabs:  [
+                          Tab(child: Text("Photos",style: titleTextBlack,),),
+                          Tab(child: Text("Video",style: titleTextBlack,),),
+                        ],
+                      ),
+                    ) ,
+
+                    ///___ List view
+                    content: Padding(
+                      padding: const EdgeInsets.only(top: 18.0),
+                      child: SizedBox(
+                        height:MediaQuery.of(context).size.height,
+                        child: TabBarView(
+                          controller: _tabController,
+                          children:const <Widget> [
+                            ///___ Photos
+                            PhotosScreen(),
+
+                            ///___ Videos
+                            VideoScreen(),
+
                           ],
                         ),
                       ),
-                      ///___ Today galley
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal:4.0),
-                          child: MasonryGridView.builder(
-                            itemCount: 40,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                            ),
-                            itemBuilder: (context, index) {
-                              return Card(
-                                color: Colors.grey,
-                                child: SizedBox(
-                                    height: 150,width: 100,
-                                    child: Image.network('https://source.unsplash.com/random?sig=$index')),
-                              );
-                            },),
-                        ),
-                      ),
+                    ),
+                  )
 
-                    ],
-                  ),
-
-                     ],
-                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          const Positioned(
-              bottom: 15,
-              right: 15,
-              child: BottomSheetScreen()
-          ),
-        ],
+            const Positioned(
+                bottom: 55,
+                right: 25,
+                child: BottomSheetScreen()
+            ),
+          ],
+        ),
       ),
     );
   }

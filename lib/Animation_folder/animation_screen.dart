@@ -17,7 +17,7 @@ class _AnimationScreenState extends State<AnimationScreen> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
     slideAnimationLeft = Tween(
       begin: const Offset(0,0),
       end: const Offset(-1.5,0),
@@ -35,80 +35,82 @@ class _AnimationScreenState extends State<AnimationScreen> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              ///___ Main black screen
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.black,
-                child:Center(child: Text("Welcome",style:headLineTextWight)),
-              ),
-
-              ///___ Dore animation
-              InkWell(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SlideTransition(
-                        position: slideAnimationLeft,
-                        child: Container(
-                          color: Colors.white,
-                          height: MediaQuery.of(context).size.height,
-                          child:  Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(""),Text("Gall",style:headLineTextBlack)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: SlideTransition(
-                        position: slideAnimationRight,
-                        child: Container(
-                          color: Colors.white,
-                          height: MediaQuery.of(context).size.height,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("ery",style:headLineTextBlack),
-                              const Text(""),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                ///___ Main black screen
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.black,
+                  child:Center(child: Text("Welcome",style:headLineTextWight)),
                 ),
-                onTap: (){
-                  if(isAnimated){
-                    isAnimated = false;
-                    animationController.reverse();
-                  }
-                  else{
-                    isAnimated = true;
-                    animationController.forward();
-                  }
-                  setState(() {
 
-                  });
-                },
+                ///___ Dore animation
+                InkWell(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SlideTransition(
+                          position: slideAnimationLeft,
+                          child: Container(
+                            color: Colors.white,
+                            height: MediaQuery.of(context).size.height,
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(""),Text("Gall",style:headLineTextBlack)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SlideTransition(
+                          position: slideAnimationRight,
+                          child: Container(
+                            color: Colors.white,
+                            height: MediaQuery.of(context).size.height,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text("ery",style:headLineTextBlack),
+                                const Text(""),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: (){
+                    if(isAnimated){
+                      isAnimated = false;
+                      animationController.reverse();
+                    }
+                    else{
+                      isAnimated = true;
+                      animationController.forward();
+                    }
+                    setState(() {
+
+                    });
+                  },
+                ),
+
+                  ///___ Home page
+              SlideTransition(
+                  position:slideAnimationBottom,
+                 child: const HomeScree()
               ),
-
-                ///___ Home page
-            SlideTransition(
-                position:slideAnimationBottom,
-               child: const HomeScree()
-            ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
