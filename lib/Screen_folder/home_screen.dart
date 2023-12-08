@@ -41,7 +41,7 @@ class _HomeScreeState extends State<HomeScree> with SingleTickerProviderStateMix
                   ///___ AppBar
                   5.height,
                   ListTile(
-                    title:  Text("   Gallery",style: headLineTextBlack2),
+                    title:  Text("  Gallery",style: headLineTextBlack2),
 
                     ///___ PopupMenuButton
                     trailing: PopupMenuButton(
