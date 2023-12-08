@@ -50,7 +50,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                           Map<String,dynamic> userMap = snapshot.data!.docs[index].data() as Map<String,dynamic>;
 
                           return Padding(
-                            padding:  const EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child:  InkWell(
                               child: Image.network(userMap["imageUrl"]),
                               onTap: (){
